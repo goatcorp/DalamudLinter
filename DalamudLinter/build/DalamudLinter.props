@@ -1,0 +1,9 @@
+﻿<Project TreatAsLocalProperty="TaskFolder;TaskAssembly">
+    <PropertyGroup>
+        <DLTaskFolder Condition=" '$(MSBuildRuntimeType)' == 'Core' ">netstandard2.1</DLTaskFolder>
+        <DLTaskFolder Condition=" '$(MSBuildRuntimeType)' != 'Core' ">net48</DLTaskFolder>
+        <DLTaskAssembly>$(MSBuildThisFileDirectory)..\tasks\$(DLTaskFolder)\DalamudLinter.dll</DLTaskAssembly>
+    </PropertyGroup>
+
+    <UsingTask TaskName="DalamudLinter" AssemblyFile="$(DLTaskAssembly)"/>
+</Project>

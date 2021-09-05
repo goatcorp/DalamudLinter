@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <PropertyGroup>
+        <LinterTargetFile>$(ProjectDir)DalamudLinter.targets</LinterTargetFile>
+    </PropertyGroup>
+
+    <Import Project="$(LinterTargetFile)" Condition="Exists('$(LinterTargetFile)')"/>
+
+    <Target Name="DefaultDalamudLinter"
+            BeforeTargets="Build"
+            Condition="'$(Configuration)' == 'Release' and !Exists('$(LinterTargetFile)')">
+        <DalamudLinter ProjectDir="$(ProjectDir)" ProjectFilePath="$(MSBuildProjectFullPath)"/>
+    </Target>
+</Project>

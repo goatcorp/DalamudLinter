@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Dalamud>$(AppData)\XIVLauncher\addon\Hooks\dev</Dalamud>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference xml:id="D0" Include="Dalamud">
+            <HintPath>$(Dalamud)\Dalamud.dll</HintPath>
+        </Reference>
+
+        <Reference xml:id="D1" Include="Dalamud">
+            <HintPath>$(Dalamud)\Dalamud.dll</HintPath>
+            <Private>true</Private>
+        </Reference>
+
+        <Reference xml:id="D2" Include="Dalamud">
+            <HintPath>$(Dalamud)\Dalamud.dll</HintPath>
+            <Private></Private>
+        </Reference>
+
+        <Reference xml:id="D3" Include="Dalamud">
+            <HintPath>$(Dalamud)\Dalamud.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+
+        <Reference xml:id="D4" Include="Dalamud">
+            <HintPath>$(Dalamud)\Dalamud.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+</Project>

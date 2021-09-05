@@ -1,0 +1,64 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <TargetFrameworks>netstandard2.1;net48</TargetFrameworks>
+        <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
+        <NoPackageAnalysis>true</NoPackageAnalysis>
+        <!-- forces SDK to copy dependencies into build output to make packing easier -->
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <!-- Change the default location where NuGet will put the build output -->
+        <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>DalamudLinter</Title>
+        <Description>An MSBuild task that checks for common mistakes made while developing Dalamud plugins.</Description>
+        <PackageLicenseExpression>EUPL-1.2</PackageLicenseExpression>
+        <Version>1.0.9</Version>
+        <Authors>Anna Clemens</Authors>
+        <PackageProjectUrl>https://github.com/goatcorp/DalamudLinter</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/goatcorp/DalamudLinter</RepositoryUrl>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Content Include="build\DalamudLinter.props">
+            <PackagePath>build\</PackagePath>
+        </Content>
+        <Content Include="buildMultiTargeting\DalamudLinter.props">
+            <PackagePath>buildMultiTargeting\</PackagePath>
+        </Content>
+
+        <Content Include="build\DalamudLinter.targets">
+            <PackagePath>build\</PackagePath>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Fody" Version="6.5.2" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.Build.Framework" Version="16.11.0" />
+        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.11.0" />
+        <PackageReference Include="Resourcer.Fody" Version="1.8.0" PrivateAssets="all" />
+        <PackageReference Include="XPath2" Version="1.1.2" />
+        <PackageReference Include="YamlDotNet" Version="11.2.1" />
+        <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\lints.yaml" />
+    </ItemGroup>
+
+    <Target Name="PackTaskDependencies" BeforeTargets="GenerateNuspec">
+        <!--
+        The include needs to happen after output has been copied to build output folder
+        but before NuGet generates a nuspec. See https://github.com/NuGet/Home/issues/4704.
+        -->
+        <ItemGroup>
+            <_PackageFiles Include="bin\$(Configuration)\*\XPath2.dll;bin\$(Configuration)\*\YamlDotNet.dll">
+                <PackagePath>tasks\%(RecursiveDir)</PackagePath>
+                <Visible>false</Visible>
+                <BuildAction>Content</BuildAction>
+            </_PackageFiles>
+        </ItemGroup>
+    </Target>
+
+</Project>

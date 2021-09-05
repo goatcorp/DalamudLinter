@@ -1,0 +1,137 @@
+- code: D0001
+  name: Private XIVLauncher dependency reference
+  severity: warn
+  description: |-
+    A XIVLauncher dependency is referenced as private.
+
+    Private dependency references are copied into the project's
+    output folder, which is usually undesired for dependencies
+    included with XIVLauncher.
+  fix: |-
+    Set the Private tag of the dependency reference to false.
+  csproj: >-
+    /Project
+    /ItemGroup
+    /Reference[@Include]
+      [contains(HintPath/text(), 'XIVLauncher')]
+      [not(Private[lower-case(text()) = 'false'])]
+
+- code: D0002
+  name: Version-specific XIVLauncher dependency reference
+  severity: warn
+  description: |-
+    A XIVLauncher dependency is referenced by a specific version.
+
+    This will cause breakage when compiling after the dependency has
+    been updated.
+  fix: |-
+    Remove everything after the comma in the Include attribute of
+    the Reference tag.
+  csproj: /Project/ItemGroup/Reference[contains(@Include, ',')]
+
+- code: D0003
+  name: Missing reference to AppData in dependency reference HintPath
+  severity: warn
+  description: |-
+    A dependency reference is missing a HintPath that references the
+    AppData variable.
+
+    For most developers' environments, this will result in the
+    dependency not being found.
+  fix: |-
+    Add a HintPath that references $(AppData).
+  csproj: /Project/ItemGroup/Reference[@Include][not(HintPath[contains(lower-case(text()), '$(appdata)')])]
+#  csproj: /Project/ItemGroup/Reference[@Include][not(HintPath[contains(text(), '$(')])]
+
+- code: D0004
+  name: Non-SDK-style Project
+  severity: error
+  description: |-
+    The project is configured in a non-SDK style.
+
+    See https://docs.microsoft.com/en-us/dotnet/core/project-sdk/overview
+  fix: |-
+    Remove ToolsVersion attribute and instead add an Sdk attribute
+    from the URL below.
+
+    https://docs.microsoft.com/en-us/dotnet/core/project-sdk/overview
+  csproj: /Project[@ToolsVersion or not(@Sdk = 'Microsoft.NET.Sdk' or starts-with(@Sdk, 'Microsoft.NET.Sdk.'))]
+
+- code: D0005
+  name: Invalid TargetFramework
+  severity: error
+  description: |-
+    The project is targeting an invalid framework.
+  fix: |-
+    Set TargetFramework to net5.0-windows or net5-windows.
+  csproj: /Project/PropertyGroup/TargetFramework[text() != 'net5-windows' and text() != 'net5.0-windows']
+
+- code: D0006
+  name: ProduceReferenceAssembly enabled
+  severity: warn
+  description: |-
+    The project is missing a ProduceReferenceAssembly tag set to
+    false.
+
+    When ProduceReferenceAssembly is missing or set to true, a
+    reference assembly will be generated in the output folder. This is
+    almost always undesired behaviour for a plugin.
+  fix: |-
+    Set the ProduceReferenceAssembly tag to false.
+  show_context: false
+  csproj: /Project[not(PropertyGroup/ProduceReferenceAssembly[lower-case(text()) = 'false'])]
+
+- code: D0007
+  name: PackageReference without CopyLocalLockFileAssemblies
+  severity: warn
+  description: |-
+    One or more PackageReference tags are specified, but no
+    CopyLocalLockFileAssemblies tag is set to true.
+
+    In this configuration, the assemblies for the PackageReference
+    dependencies will not be copied to the output folder, which will
+    almost always result in load errors.
+  fix: |-
+    Set the CopyLocalLockFileAssemblies tag to true.
+  show_context: false
+  csproj: >-
+    /Project
+      [ItemGroup/PackageReference[@Include and @Version]]
+      [not(PropertyGroup/CopyLocalLockFileAssemblies[lower-case(text()) = 'true'])]
+
+- code: D0008
+  name: ImGuiScene reference
+  severity: warn
+  description: |-
+    The project references the ImGuiScene assembly.
+
+    In the past, referencing ImGuiScene was necessary in order to use
+    ImGui. However, Dalamud has since updated to remove this
+    constraint. There is now almost no reason to reference ImGuiScene,
+    and it is almost always unnecessary.
+  fix: |-
+    Remove the reference.
+  csproj: >-
+    /Project
+    /ItemGroup
+    /Reference[@Include = 'ImGuiScene' or starts-with(@Include, 'ImGuiScene,')]
+
+- code: D0009
+  name: Dependency reference to specific Dalamud release
+  severity: warn
+  description: |-
+    A dependency reference is pinned to a specific Dalamud release.
+
+    This is often a mistake, as most developers will want to target
+    the dev "release" to compile against the latest assemblies
+    included with Dalamud.
+  fix: |-
+    Replace the reference to a specific release with dev.
+  csproj: >-
+    /Project
+    /ItemGroup
+    /Reference[@Include]
+      [not(
+        contains(HintPath/text(), '\dev\')
+          or contains(HintPath/text(), '/dev/')
+      )]
