@@ -19,5 +19,10 @@
             <HintPath>$(AppData)\XIVLauncher\addon\Hooks\6.0.0.0\Dalamud.dll</HintPath>
             <Private>false</Private>
         </Reference>
+
+        <Reference xml:id="D3" Include="Dalamud">
+            <HintPath>D:\Other\Other.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
     </ItemGroup>
 </Project>

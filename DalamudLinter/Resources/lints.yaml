@@ -137,6 +137,7 @@
     /Project
     /ItemGroup
     /Reference[@Include]
+      [HintPath[contains(lower-case(text()), 'xivlauncher')]]
       [not(
         contains(HintPath/text(), '\dev\')
           or contains(HintPath/text(), '/dev/')
