@@ -30,7 +30,7 @@
   csproj: /Project/ItemGroup/Reference[contains(@Include, ',')]
 
 - code: D0003
-  name: Missing reference to AppData in dependency reference HintPath
+  name: Public dependency missing reference to AppData in HintPath
   severity: warn
   description: |-
     A dependency reference is missing a HintPath that references the
@@ -40,7 +40,13 @@
     dependency not being found.
   fix: |-
     Add a HintPath that references $(AppData).
-  csproj: /Project/ItemGroup/Reference[@Include][not(HintPath[contains(lower-case(text()), '$(appdata)')])]
+  csproj: >-
+    /Project
+    /ItemGroup
+    /Reference[@Include]
+      [Private[lower-case(text()) = 'false']]
+      [not(HintPath[contains(lower-case(text()), '$(appdata)')])]
+#      [HintPath[contains(lower-case(text()), 'xivlauncher')]]
 #  csproj: /Project/ItemGroup/Reference[@Include][not(HintPath[contains(text(), '$(')])]
 
 - code: D0004

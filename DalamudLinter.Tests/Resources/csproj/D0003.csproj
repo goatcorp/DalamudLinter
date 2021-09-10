@@ -23,5 +23,13 @@
             <HintPath>$(UnknownVariable)\Dalamud.dll</HintPath>
             <Private>false</Private>
         </Reference>
+
+        <Reference xml:id="D4" Include="Dalamud">
+            <HintPath>$(UnknownVariable)\Dalamud.dll</HintPath>
+        </Reference>
+
+        <Reference xml:id="D5" Include="OtherLib">
+            <HintPath>..\OtherLib\bin\Release\net5.0-windows\OtherLib.dll</HintPath>
+        </Reference>
     </ItemGroup>
 </Project>
