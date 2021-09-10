@@ -14,7 +14,7 @@
         <Title>DalamudLinter</Title>
         <Description>An MSBuild task that checks for common mistakes made while developing Dalamud plugins.</Description>
         <PackageLicenseExpression>EUPL-1.2</PackageLicenseExpression>
-        <Version>1.0.0</Version>
+        <Version>1.0.1</Version>
         <Authors>Anna Clemens</Authors>
         <PackageProjectUrl>https://github.com/goatcorp/DalamudLinter</PackageProjectUrl>
         <RepositoryUrl>https://github.com/goatcorp/DalamudLinter</RepositoryUrl>
