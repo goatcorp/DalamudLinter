@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Wmhelp.XPath2;
@@ -45,7 +46,8 @@ namespace DalamudLinter {
                 .XPath2Select("/Project/PropertyGroup/node()")
                 .Where(elem => elem is XElement)
                 .Cast<XElement>()
-                .ToDictionary(elem => elem.Name, elem => elem.Value);
+                .GroupBy(elem => elem.Name.LocalName, elem => elem.Value, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(group => group.Key, group => group.First());
 
             // replace any reference to a local property with the property's value
             bool anyChanged;
