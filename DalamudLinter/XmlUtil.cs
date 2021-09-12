@@ -5,7 +5,7 @@ using Wmhelp.XPath2;
 
 namespace DalamudLinter {
     public static class XmlUtil {
-                private static readonly Regex ReferenceRegex = new(@"\$\((\w+)\)", RegexOptions.Compiled);
+        private static readonly Regex ReferenceRegex = new(@"\$\((\w+)\)", RegexOptions.Compiled);
 
         public static void Preprocess(XNode xml) {
             void EnsureElement(XElement reference, string name) {
@@ -42,7 +42,9 @@ namespace DalamudLinter {
 
             // collect all properties and their values
             var allProps = xml
-                .XPath2SelectElements("/Project/PropertyGroup/node()")
+                .XPath2Select("/Project/PropertyGroup/node()")
+                .Where(elem => elem is XElement)
+                .Cast<XElement>()
                 .ToDictionary(elem => elem.Name, elem => elem.Value);
 
             // replace any reference to a local property with the property's value
@@ -50,7 +52,10 @@ namespace DalamudLinter {
             do {
                 anyChanged = false;
 
-                foreach (var withRef in xml.XPath2SelectElements("/Project//node()[contains(text(), '$(')]")) {
+                var withRefs = xml.XPath2Select("/Project//node()[contains(text(), '$(')]")
+                    .Where(elem => elem is XElement)
+                    .Cast<XElement>();
+                foreach (var withRef in withRefs) {
                     var compiledValue = withRef.Value;
 
                     foreach (Match reference in ReferenceRegex.Matches(withRef.Value)) {
